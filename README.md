@@ -1,27 +1,23 @@
-# React + TypeScript + Vite
+# Introducción
+HandLanguage works with a memory of an indefinite size of bytes, with all values initialized to 0. This language have 7 instructions:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- 👉 Moves memory pointer to the next cell.
+- 👈 Moves memory pointer to the previous cell.
+- 👆 Increments the value of the cell pointed.
+- 👇 Decrements the value of the cell pointed.
+- 🤜 if the memory cell at the current position is 0, jump just after the next 🤛.
+- 🤛 if the memory cell at the current position is not 0, jump just after the previous 🤜.
 
-Currently, two official plugins are available:
+## Notes
+- AS memory cells are bytes, from 0 to 255 value, if you decrease 0 tou'll get 255. If you increase 255 you'll get 0.
+- Loops of 🤜 and 🤛 can be nested.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Tests
+Small test your app must pass:
+## This program display "Hello"
 
-## Expanding the ESLint configuration
+👇🤜👇👇👇👇👇👇👇👉👆👈🤛👉👇👊👇🤜👇👉👆👆👆👆👆👈🤛👉👆👆👊👆👆👆👆👆👆👆👊👊👆👆👆👊
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## This program (with nested loops) display "Hello World!"
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+👉👆👆👆👆👆👆👆👆🤜👇👈👆👆👆👆👆👆👆👆👆👉🤛👈👊👉👉👆👉👇🤜👆🤛👆👆👉👆👆👉👆👆👆🤜👉🤜👇👉👆👆👆👈👈👆👆👆👉🤛👈👈🤛👉👇👇👇👇👇👊👉👇👉👆👆👆👊👊👆👆👆👊👉👇👊👈👈👆🤜👉🤜👆👉👆🤛👉👉🤛👈👇👇👇👇👇👇👇👇👇👇👇👇👇👇👊👉👉👊👆👆👆👊👇👇👇👇👇👇👊👇👇👇👇👇👇👇👇👊👉👆👊👉👆👊
