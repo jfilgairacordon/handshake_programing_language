@@ -1,6 +1,8 @@
 # App url
 https://jfilgairacordon.github.io/handshake_programing_language/
 
+This is an implementation of this: https://github.com/jesus-seijas-sp/hand-challenge/tree/main but in a web environment.
+
 # Introducción
 HandLanguage works with a memory of an indefinite size of bytes, with all values initialized to 0. This language have 7 instructions:
 
