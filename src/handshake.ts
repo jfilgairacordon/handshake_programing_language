@@ -10,7 +10,6 @@ enum HANDSHAKE_ACTION {
 
 export const handshakeTranslator = (code: string[]): string => {
   const data: number[] = []
-  let skips = 0
   let result = ''
   let position = 0
   let codeIterator = 0
@@ -47,20 +46,29 @@ export const handshakeTranslator = (code: string[]): string => {
 
     // if the memory cell at the current position is 0, jump just after the corresponding 🤛
     if (currentChar === HANDSHAKE_ACTION.JUMP_RIGHT) {
-      skips += 1
       if (data[position] === 0) {
-        codeIterator = findClosest({ code, currentPosition: codeIterator, type: 'start', skips })
-        // jumps after the corresponding at the end of the loop (line 71)
+        codeIterator = findClosest({
+          code,
+          currentPosition: codeIterator,
+          lookFor: HANDSHAKE_ACTION.JUMP_LEFT,
+          origin: HANDSHAKE_ACTION.JUMP_RIGHT
+        })
+        // jumps after the corresponding at the end of the loop (line 79)
       }
     }
 
     // if the memory cell at the current position is not 0, jump just after the corresponding 🤜
     if (currentChar === HANDSHAKE_ACTION.JUMP_LEFT) {
       if (data[position] !== 0) {
-        codeIterator = findClosest({ code, currentPosition: codeIterator, type: 'end', skips })
-        // jumps after the corresponding at the end of the loop (line 71)
+        codeIterator = findClosest({
+          code,
+          currentPosition:
+          codeIterator,
+          lookFor: HANDSHAKE_ACTION.JUMP_RIGHT,
+          origin: HANDSHAKE_ACTION.JUMP_LEFT
+        })
+        // jumps after the corresponding at the end of the loop (line 79)
       }
-      skips = skips > 0 ? skips -= 1 : skips
     }
 
     // Display the current character represented by the ASCII code defined by the current position.
@@ -77,22 +85,29 @@ export const handshakeTranslator = (code: string[]): string => {
 type FindClosestParams = | {
   code: string[]
   currentPosition: number
-  type: 'start' | 'end'
-  skips: number
+  lookFor: HANDSHAKE_ACTION
+  origin: HANDSHAKE_ACTION
 }
-const findClosest = ({ code, currentPosition, type, skips }: FindClosestParams): number => {
+
+const findClosest = ({ code, currentPosition, lookFor, origin }: FindClosestParams): number => {
   let currentCode = code[currentPosition]
-  const condition = type === 'end' ? HANDSHAKE_ACTION.JUMP_RIGHT : HANDSHAKE_ACTION.JUMP_LEFT
-  while (currentCode !== condition) {
-    currentPosition = type === 'start' ? currentPosition + 1 : currentPosition - 1
-    // If we have the exit condition but it's needed to skip more, then skip 1 position
-    // and drecrease the skip counter
-    if (currentCode === condition && skips > 0) {
-      currentPosition -= 1
-      skips -= 1
+  let skips = 0
+
+  while (currentCode !== lookFor) {
+    currentPosition = lookFor === HANDSHAKE_ACTION.JUMP_LEFT ? currentPosition + 1 : currentPosition - 1
+    currentCode = code[currentPosition]
+
+    // If we find the same type of jump, we skip it
+    if (currentCode === origin) {
+      skips += 1
     }
 
-    currentCode = code[currentPosition]
+    // If we have to skip..
+    if (currentCode === lookFor && skips > 0) {
+      skips -= 1
+      currentPosition = lookFor === HANDSHAKE_ACTION.JUMP_LEFT ? currentPosition + 1 : currentPosition - 1
+      currentCode = code[currentPosition]
+    }
   }
 
   return currentPosition
