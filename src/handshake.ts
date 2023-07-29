@@ -108,6 +108,10 @@ const findClosest = ({ code, currentPosition, lookFor, origin }: FindClosestPara
       currentPosition = lookFor === HANDSHAKE_ACTION.JUMP_LEFT ? currentPosition + 1 : currentPosition - 1
       currentCode = code[currentPosition]
     }
+
+    if (currentPosition >= code.length) {
+      throw new Error('No matching jump found')
+    }
   }
 
   return currentPosition
