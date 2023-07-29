@@ -1,13 +1,3 @@
-enum HANDSHAKE_ACTION {
-  MOVE_RIGHT = '👉',
-  MOVE_LEFT = '👈',
-  INCREMENT = '👆',
-  DECREMENT = '👇',
-  JUMP_RIGHT = '🤜',
-  JUMP_LEFT = '🤛',
-  DISPLAY = '👊'
-}
-
 export const handshakeTranslator = (code: string[]): string => {
   const data: number[] = []
   let result = ''
@@ -21,58 +11,57 @@ export const handshakeTranslator = (code: string[]): string => {
     if (data[position] === undefined) data[position] = 0
 
     //  Moves the memory pointer to the next cell
-    if (currentChar === HANDSHAKE_ACTION.MOVE_RIGHT) {
+    if (currentChar === '👉') {
       position += 1
     }
 
     // Moves the memory pointer to the previous cell
-    if (currentChar === HANDSHAKE_ACTION.MOVE_LEFT) {
+    if (currentChar === '👈') {
       position -= 1
     }
 
     // Increments the memory pointer cell value
-    if (currentChar === HANDSHAKE_ACTION.INCREMENT) {
+    if (currentChar === '👆') {
       if (data[position] === 255) {
         data[position] = 0
       } else { data[position] += 1 }
     }
 
     // Decrements the memory pointer cell value
-    if (currentChar === HANDSHAKE_ACTION.DECREMENT) {
+    if (currentChar === '👇') {
       if (data[position] === 0) {
         data[position] = 255
       } else { data[position] -= 1 }
     }
 
     // if the memory cell at the current position is 0, jump just after the corresponding 🤛
-    if (currentChar === HANDSHAKE_ACTION.JUMP_RIGHT) {
+    if (currentChar === '🤜') {
       if (data[position] === 0) {
         codeIterator = findClosest({
           code,
           currentPosition: codeIterator,
-          lookFor: HANDSHAKE_ACTION.JUMP_LEFT,
-          origin: HANDSHAKE_ACTION.JUMP_RIGHT
+          lookFor: '🤛',
+          origin: '🤜'
         })
         // jumps after the corresponding at the end of the loop (line 79)
       }
     }
 
     // if the memory cell at the current position is not 0, jump just after the corresponding 🤜
-    if (currentChar === HANDSHAKE_ACTION.JUMP_LEFT) {
+    if (currentChar === '🤛') {
       if (data[position] !== 0) {
         codeIterator = findClosest({
           code,
-          currentPosition:
-          codeIterator,
-          lookFor: HANDSHAKE_ACTION.JUMP_RIGHT,
-          origin: HANDSHAKE_ACTION.JUMP_LEFT
+          currentPosition: codeIterator,
+          lookFor: '🤜',
+          origin: '🤛'
         })
         // jumps after the corresponding at the end of the loop (line 79)
       }
     }
 
     // Display the current character represented by the ASCII code defined by the current position.
-    if (currentChar === HANDSHAKE_ACTION.DISPLAY) {
+    if (currentChar === '👊') {
       result += String.fromCharCode(data[position])
     }
 
@@ -85,8 +74,8 @@ export const handshakeTranslator = (code: string[]): string => {
 type FindClosestParams = | {
   code: string[]
   currentPosition: number
-  lookFor: HANDSHAKE_ACTION
-  origin: HANDSHAKE_ACTION
+  lookFor: '🤜' | '🤛'
+  origin: '🤜' | '🤛'
 }
 
 const findClosest = ({ code, currentPosition, lookFor, origin }: FindClosestParams): number => {
@@ -94,7 +83,7 @@ const findClosest = ({ code, currentPosition, lookFor, origin }: FindClosestPara
   let skips = 0
 
   while (currentCode !== lookFor) {
-    currentPosition = lookFor === HANDSHAKE_ACTION.JUMP_LEFT ? currentPosition + 1 : currentPosition - 1
+    currentPosition = lookFor === '🤛' ? currentPosition + 1 : currentPosition - 1
     currentCode = code[currentPosition]
 
     // If we find the same type of jump, we skip it
@@ -105,7 +94,7 @@ const findClosest = ({ code, currentPosition, lookFor, origin }: FindClosestPara
     // If we have to skip..
     if (currentCode === lookFor && skips > 0) {
       skips -= 1
-      currentPosition = lookFor === HANDSHAKE_ACTION.JUMP_LEFT ? currentPosition + 1 : currentPosition - 1
+      currentPosition = lookFor === '🤛' ? currentPosition + 1 : currentPosition - 1
       currentCode = code[currentPosition]
     }
 
